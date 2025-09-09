@@ -22,7 +22,7 @@ class Human(
     fun move() {
         x += Random.nextDouble(-currentSpeed, currentSpeed)
         y += Random.nextDouble(-currentSpeed, currentSpeed)
-        println("${fullName} ${age}: (${"%.1f".format(x)}, ${"%.1f".format(y)})")
+        println("${fullName} ${age} лет: (${"%.1f".format(x)}, ${"%.1f".format(y)})")
     }
 }
 
