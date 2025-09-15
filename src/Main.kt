@@ -1,7 +1,7 @@
 import kotlin.random.Random
 
 
-class Human(
+open class Human(
     var fullName: String,
     age: Int,
     currentSpeed: Double
@@ -19,10 +19,23 @@ class Human(
 
     var x: Double = 0.0
     var y: Double = 0.0
-    fun move() {
+    open fun move() {
         x += Random.nextDouble(-currentSpeed, currentSpeed)
         y += Random.nextDouble(-currentSpeed, currentSpeed)
         println("${fullName} ${age} лет: (${"%.1f".format(x)}, ${"%.1f".format(y)})")
+    }
+}
+
+class Driver(
+    fullName: String,
+    age: Int,
+    currentSpeed: Double,
+    var Category: String,
+    var Car: String,
+) : Human (fullName, age, currentSpeed) {
+    override fun move(){
+        x+=Random.nextDouble(currentSpeed)
+        println("Водитель ${fullName} ${age} лет едет на автомобиле марки ${Car} со скоростью ${"%.1f".format(x)} и обладает правами категории ${Category}")
     }
 }
 
@@ -53,6 +66,7 @@ fun main() {
     )
     while (simulationTime!=0) {
         println("============================================================")
+        Driver("Иван Иванов", 25, 110.0, "B", "Mercedes").move()
         for (human in humans) {
             human.move()
         }
