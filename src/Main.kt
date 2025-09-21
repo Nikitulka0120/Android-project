@@ -20,9 +20,15 @@ open class Human(
     var x: Double = 0.0
     var y: Double = 0.0
     open fun move() {
-        x += Random.nextDouble(-currentSpeed, currentSpeed)
-        y += Random.nextDouble(-currentSpeed, currentSpeed)
-        println("${fullName} ${age} лет: (${"%.1f".format(x)}, ${"%.1f".format(y)})")
+        Thread {
+            repeat(10) {
+                x += Random.nextDouble(-currentSpeed, currentSpeed)
+                y += Random.nextDouble(-currentSpeed, currentSpeed)
+                println("${fullName} $age лет [${Thread.currentThread().name}]: " +
+                        "(${"%.1f".format(x)}, ${"%.1f".format(y)})")
+                Thread.sleep(1000)
+            }
+        }.start()
     }
 }
 
@@ -34,8 +40,13 @@ class Driver(
     var Car: String,
 ) : Human (fullName, age, currentSpeed) {
     override fun move(){
-        x+=Random.nextDouble(currentSpeed)
-        println("Водитель ${fullName} ${age} лет едет на автомобиле марки ${Car} со скоростью ${currentSpeed} и обладает правами категории ${Category}, текущая позиция ${"%.1f".format(x)}")
+        Thread{
+            repeat(10){
+                x+=Random.nextDouble(currentSpeed)
+                println("Водитель ${fullName} ${age} лет едет на автомобиле марки ${Car} со скоростью ${currentSpeed} и обладает правами категории ${Category}, текущая позиция ${"%.1f".format(x)}")
+                Thread.sleep(1000)
+            }
+        }.start()
     }
 }
 
@@ -50,13 +61,5 @@ fun main() {
         Driver("Иван Иванов", 25, 110.0, "B", "Mercedes")
     )
 
-    humans.forEach { human ->
-        Thread {
-            repeat(10) {
-
-                human.move()
-                Thread.sleep(1000)
-            }
-        }.start()
-    }
+    humans.forEach {human -> human.move() }
 }
