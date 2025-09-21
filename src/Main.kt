@@ -1,7 +1,7 @@
 import kotlin.random.Random
 
 
-class Human(
+open class Human(
     var fullName: String,
     age: Int,
     currentSpeed: Double
@@ -19,12 +19,38 @@ class Human(
 
     var x: Double = 0.0
     var y: Double = 0.0
-    fun move() {
-        x += Random.nextDouble(-currentSpeed, currentSpeed)
-        y += Random.nextDouble(-currentSpeed, currentSpeed)
-        println("${fullName} ${age} лет: (${"%.1f".format(x)}, ${"%.1f".format(y)})")
+    open fun move() {
+        Thread {
+            repeat(10) {
+                x += Random.nextDouble(-currentSpeed, currentSpeed)
+                y += Random.nextDouble(-currentSpeed, currentSpeed)
+                println("${fullName} $age лет [${Thread.currentThread().name}]: " +
+                        "(${"%.1f".format(x)}, ${"%.1f".format(y)})")
+                Thread.sleep(1000)
+            }
+        }.start()
     }
 }
+
+class Driver(
+    fullName: String,
+    age: Int,
+    currentSpeed: Double,
+    var Category: String,
+    var Car: String,
+) : Human (fullName, age, currentSpeed) {
+    override fun move(){
+        Thread{
+            repeat(10){
+                x+=Random.nextDouble(currentSpeed)
+                println("Водитель ${fullName} ${age} лет едет на автомобиле марки ${Car} со скоростью ${currentSpeed} и обладает правами категории ${Category}, текущая позиция ${"%.1f".format(x)}")
+                Thread.sleep(1000)
+            }
+        }.start()
+    }
+}
+
+
 
 fun main() {
     var simulationTime = 10
@@ -32,32 +58,8 @@ fun main() {
         Human("Иван Иванов", 25, 2.5),
         Human("Петр Петров", 30, 3.0),
         Human("Анна Сидорова", 22, 1.8),
-        Human("Мария Козлова", 28, 2.2),
-        Human("Алексей Смирнов", 35, 3.5),
-        Human("Елена Волкова", 26, 2.0),
-        Human("Дмитрий Попов", 31, 2.8),
-        Human("Ольга Васильева", 24, 1.5),
-        Human("Сергей Павлов", 29, 3.2),
-        Human("Наталья Семенова", 27, 2.1),
-        Human("Андрей Голубев", 32, 2.9),
-        Human("Татьяна Виноградова", 23, 1.7),
-        Human("Михаил Орлов", 33, 3.1),
-        Human("Юлия Лебедева", 26, 2.3),
-        Human("Владимир Новиков", 34, 3.3),
-        Human("Екатерина Морозова", 25, 2.4),
-        Human("Александр Ковалев", 30, 2.7),
-        Human("Ирина Зайцева", 28, 2.6),
-        Human("Николай Соловьев", 31, 3.4),
-        Human("Светлана Федорова", 29, 2.5),
-        Human("Артем Яковлев", 27, 1.9)
+        Driver("Иван Иванов", 25, 110.0, "B", "Mercedes")
     )
-    while (simulationTime!=0) {
-        println("============================================================")
-        for (human in humans) {
-            human.move()
-        }
-        println("============================================================")
-        Thread.sleep(1000)
-        simulationTime-=1
-    }
+
+    humans.forEach {human -> human.move() }
 }
