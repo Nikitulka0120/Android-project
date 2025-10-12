@@ -38,28 +38,70 @@ class CalcButton(
 
 
 private fun calculate(expression: String): String {
-    return when {
-        expression.contains("+") -> {
-            val parts = expression.split("+")
-            (parts[0].toDouble() + parts[1].toDouble()).toString()
+    try {
+        val numbers = mutableListOf<Double>()
+        val operators = mutableListOf<Char>()
+        var currentNumber = ""
+        if (expression[0]=='-' || expression[0]=='+'){
+            currentNumber = "0"
         }
-        expression.contains("-") -> {
-            val parts = expression.split("-")
-            (parts[0].toDouble() - parts[1].toDouble()).toString()
+
+        for (i in expression.indices) {
+            val char = expression[i]
+
+            if (char.isDigit() || char == '.') {
+                currentNumber += char
+            }
+            if ((!char.isDigit() && char != '.') || i == expression.length - 1) {
+                    numbers.add(currentNumber.toDouble())
+                    currentNumber = ""
+                if (char == '+' || char == '-' || char == 'x' || char == '÷') {
+                        operators.add(char)
+
+                }
+            }
         }
-        expression.contains("x") -> {
-            val parts = expression.split("x")
-            (parts[0].toDouble() * parts[1].toDouble()).toString()
+        var i = 0
+        while (i < operators.size) {
+            val op = operators[i]
+            if (op == 'x' || op == '÷') {
+                val a = numbers.getOrNull(i)
+                val b = numbers.getOrNull(i + 1)
+                if (a == null || b == null) {
+                    return "Недостаточно операндов"
+                }
+                val res = when (op) {
+                    'x' -> a * b
+                    '÷' -> if (b != 0.0) a / b else return "Деление на 0"
+                    else -> 0.0
+                }
+                numbers[i] = res
+                numbers.removeAt(i + 1)
+                operators.removeAt(i)
+            } else {
+                i++
+            }
         }
-        expression.contains("÷") -> {
-            val parts = expression.split("÷")
-            val b = parts[1].toDouble()
-            if (b == 0.0) "Ошибка" else (parts[0].toDouble() / b).toString()
+        var result = numbers.firstOrNull() ?: return "Ошибка: нет чисел"
+        for (j in operators.indices) {
+            val op = operators[j]
+            val b = numbers.getOrNull(j + 1) ?: continue
+            when (op) {
+                '+' -> result += b
+                '-' -> result -= b
+            }
         }
-        else -> expression
+
+        return if (result % 1 == 0.0) {
+            result.toInt().toString()
+        } else {
+            result.toString()
+        }
+
+    } catch (e: Exception) {
+        return "Error"
     }
 }
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -75,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_0, R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4,
             R.id.btn_5, R.id.btn_6, R.id.btn_7, R.id.btn_8, R.id.btn_9,
             R.id.btn_plus, R.id.btn_minus, R.id.btn_umnozenie,
-            R.id.delenie, R.id.skobkaleft, R.id.skobkaright, R.id.btn_zapyataya,
+            R.id.delenie, R.id.btn_zapyataya,
             R.id.AC, R.id.btn_delete,R.id.btn_ravno
         ).forEach { id ->
             CalcButton(findViewById(id), mainText)

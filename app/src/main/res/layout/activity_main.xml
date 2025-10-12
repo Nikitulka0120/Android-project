@@ -41,19 +41,9 @@
                 android:text="AC" />
 
             <Button
-                android:id="@+id/skobkaleft"
-                style="@style/ActionButton"
-                android:text="(" />
-
-            <Button
-                android:id="@+id/skobkaright"
-                style="@style/ActionButton"
-                android:text=")" />
-
-            <Button
-                android:id="@+id/delenie"
-                style="@style/ActionButton"
-                android:text="÷" />
+                android:id="@+id/btn_ravno"
+                style="@style/Ravno_button"
+                android:text="=" />
         </LinearLayout>
 
         <LinearLayout
@@ -147,11 +137,10 @@
                 android:id="@+id/btn_0"
                 style="@style/NumericButton"
                 android:text="0" />
-
             <Button
                 android:id="@+id/btn_zapyataya"
                 style="@style/NumericButton"
-                android:text="," />
+                android:text="." />
 
             <Button
                 android:id="@+id/btn_delete"
@@ -159,9 +148,9 @@
                 android:text="⌫" />
 
             <Button
-                android:id="@+id/btn_ravno"
-                style="@style/Ravno_button"
-                android:text="=" />
+                android:id="@+id/delenie"
+                style="@style/ActionButton"
+                android:text="÷" />
         </LinearLayout>
     </LinearLayout>
 
