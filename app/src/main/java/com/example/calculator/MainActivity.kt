@@ -1,84 +1,44 @@
 package com.example.calculator
-
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
+import android.content.Context
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
 
-class CalcButton(
-    private val button: Button,
-    private val mainText: TextView,
+class ZaglushkaButton(
+    private val button: Button
 ) {
     init {
-        if (button.text == "AC"){
-            button.setOnClickListener {
-                mainText.text = ""
-            }
-        }
-        else if (button.text == "⌫"){
-            button.setOnClickListener {
-                val str = mainText.text.toString()
-                if(str.isNotEmpty()){
-                    mainText.text = str.substring(0, str.length - 1)
-                }
-            }
-        }
-        else if (button.text == "="){
-            button.setOnClickListener {
-                mainText.text = calculate(mainText.text.toString())
-            }
-        }
-        else{button.setOnClickListener {
-            mainText.append(button.text)
-        }}
-
-            }
-        }
-
-
-private fun calculate(expression: String): String {
-    return when {
-        expression.contains("+") -> {
-            val parts = expression.split("+")
-            (parts[0].toDouble() + parts[1].toDouble()).toString()
-        }
-        expression.contains("-") -> {
-            val parts = expression.split("-")
-            (parts[0].toDouble() - parts[1].toDouble()).toString()
-        }
-        expression.contains("x") -> {
-            val parts = expression.split("x")
-            (parts[0].toDouble() * parts[1].toDouble()).toString()
-        }
-        expression.contains("÷") -> {
-            val parts = expression.split("÷")
-            val b = parts[1].toDouble()
-            if (b == 0.0) "Ошибка" else (parts[0].toDouble() / b).toString()
-        }
-        else -> expression
-    }
+        button.setOnClickListener {
+            val context = button.context
+            val message = "Функционал ${button.text} временно недоступен :("
+            val duration = Toast.LENGTH_SHORT
+            Toast.makeText(context, message, duration).show()
 }
+
+            }
+        }
 
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var mainText: TextView
+    private lateinit var GoToCalcBTN: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        mainText = findViewById(R.id.main_text)
-
+        GoToCalcBTN = findViewById(R.id.GoToCalc)
+        GoToCalcBTN.setOnClickListener({
+            val randomIntent = Intent(this, CalculatorActivity::class.java)
+            startActivity(randomIntent)
+        });
         listOf(
-            R.id.btn_0, R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4,
-            R.id.btn_5, R.id.btn_6, R.id.btn_7, R.id.btn_8, R.id.btn_9,
-            R.id.btn_plus, R.id.btn_minus, R.id.btn_umnozenie,
-            R.id.delenie, R.id.skobkaleft, R.id.skobkaright, R.id.btn_zapyataya,
-            R.id.AC, R.id.btn_delete,R.id.btn_ravno
+            R.id.GoToGeo, R.id.GoToPlayer, R.id.GoToMobileData
         ).forEach { id ->
-            CalcButton(findViewById(id), mainText)
+            ZaglushkaButton(findViewById(id))
         }
     }
 }
