@@ -25,6 +25,7 @@ class ZaglushkaButton(
 
 class MainActivity : AppCompatActivity() {
     private lateinit var GoToCalcBTN: Button
+    private lateinit var GoToPlayerBTN: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,8 +36,13 @@ class MainActivity : AppCompatActivity() {
             val randomIntent = Intent(this, CalculatorActivity::class.java)
             startActivity(randomIntent)
         });
+        GoToPlayerBTN = findViewById(R.id.GoToPlayer)
+        GoToPlayerBTN.setOnClickListener({
+            val randomIntent = Intent(this, MediaPlayer::class.java)
+            startActivity(randomIntent)
+        });
         listOf(
-            R.id.GoToGeo, R.id.GoToPlayer, R.id.GoToMobileData
+            R.id.GoToGeo, R.id.GoToMobileData
         ).forEach { id ->
             ZaglushkaButton(findViewById(id))
         }
