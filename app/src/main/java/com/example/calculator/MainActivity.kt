@@ -26,23 +26,29 @@ class ZaglushkaButton(
 class MainActivity : AppCompatActivity() {
     private lateinit var GoToCalcBTN: Button
     private lateinit var GoToPlayerBTN: Button
+    private lateinit var GoToLocationBTN: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         GoToCalcBTN = findViewById(R.id.GoToCalc)
-        GoToCalcBTN.setOnClickListener({
+        GoToCalcBTN.setOnClickListener{
             val randomIntent = Intent(this, CalculatorActivity::class.java)
             startActivity(randomIntent)
-        });
+        };
         GoToPlayerBTN = findViewById(R.id.GoToPlayer)
-        GoToPlayerBTN.setOnClickListener({
+        GoToPlayerBTN.setOnClickListener{
             val randomIntent = Intent(this, MediaPlayer::class.java)
             startActivity(randomIntent)
-        });
+        };
+        GoToLocationBTN = findViewById(R.id.GoToGeo)
+        GoToLocationBTN.setOnClickListener {
+            val randomIntent = Intent(this, Location::class.java)
+            startActivity(randomIntent)
+        }
         listOf(
-            R.id.GoToGeo, R.id.GoToMobileData
+            R.id.GoToMobileData
         ).forEach { id ->
             ZaglushkaButton(findViewById(id))
         }
