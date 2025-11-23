@@ -16,7 +16,29 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.provider.Settings
 import android.util.Log
+import java.io.File
 
+
+class CurrentLoc(
+    val Latitute: Double,
+    val Longitute: Double,
+    val Altitute: Double,
+    val time: Long
+){
+    fun saveInFile(file: File, context: Context){
+        if (!file.exists()) {
+            Toast.makeText(context, "Попытка создания файл", Toast.LENGTH_SHORT).show()
+            file.createNewFile()
+            Toast.makeText(context, "Файл создан", Toast.LENGTH_SHORT).show()
+        }
+        try {
+            file.appendText("""{"lat":$Latitute,"lon":$Longitute,"alt":$Altitute,"time":$time}""" + "\n")
+        } catch (e: Exception) {
+            Log.e("LocationData", "Error saving to file", e)
+            Toast.makeText(context, "Error saving location", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
 class Location : LocationListener, AppCompatActivity() {
     val value: Int = 0
@@ -90,6 +112,11 @@ class Location : LocationListener, AppCompatActivity() {
     }
 
     private fun requestPermissions() {
+        if (!android.os.Environment.isExternalStorageManager()) {
+            val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+            intent.data = android.net.Uri.parse("package:$packageName")
+            startActivity(intent)
+        }
         Log.w(LOG_TAG, "requestPermissions()");
         ActivityCompat.requestPermissions(
             this,
@@ -101,7 +128,8 @@ class Location : LocationListener, AppCompatActivity() {
 
     private fun checkPermissions(): Boolean{
         if( ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED )
+            ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+            android.os.Environment.isExternalStorageManager())
         {
             return true
         } else {
@@ -134,5 +162,9 @@ class Location : LocationListener, AppCompatActivity() {
         tvLon.setText(location.longitude.toString())
         tvAlt.setText(location.altitude.toString())
         tvTime.setText(location.time.toString())
+        val file = File(filesDir, "locations.json")
+        val exfile = File("/storage/emulated/0/Documents", "locations.json")
+        CurrentLoc(location.latitude, location.longitude, location.altitude, location.time).saveInFile(file, this)
+        CurrentLoc(location.latitude, location.longitude, location.altitude, location.time).saveInFile(exfile, this)
     }
 }
