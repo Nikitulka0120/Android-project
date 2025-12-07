@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var GoToCalcBTN: Button
     private lateinit var GoToPlayerBTN: Button
     private lateinit var GoToLocationBTN: Button
+    private lateinit var GoToMobileBTN: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +48,16 @@ class MainActivity : AppCompatActivity() {
             val randomIntent = Intent(this, Location::class.java)
             startActivity(randomIntent)
         }
-        listOf(
-            R.id.GoToMobileData
-        ).forEach { id ->
-            ZaglushkaButton(findViewById(id))
+        GoToMobileBTN = findViewById(R.id.GoToMobileData)
+        GoToMobileBTN.setOnClickListener {
+            val randomIntent = Intent(this, MobileData::class.java)
+            startActivity(randomIntent)
         }
+
+//        listOf  (
+//            R.id.GoToMobileData
+//        ).forEach { id ->
+//            ZaglushkaButton(findViewById(id))
+//        }
     }
 }
