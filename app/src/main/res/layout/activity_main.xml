@@ -43,6 +43,20 @@
             android:layout_height="74dp"
             android:text="Mobile Network Data"
             android:layout_margin="10dp"/>
+
+        <Button
+            android:id="@+id/goToZMQ"
+            android:layout_width="match_parent"
+            android:layout_height="74dp"
+            android:layout_margin="10dp"
+            android:text="Клиент-сервер" />
+
+        <Button
+            android:id="@+id/zaglushkaBTN"
+            android:layout_width="match_parent"
+            android:layout_height="74dp"
+            android:layout_margin="10dp"
+            android:text="Запасная кнопка" />
     </LinearLayout>
 
 </LinearLayout>

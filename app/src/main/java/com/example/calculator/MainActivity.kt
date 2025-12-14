@@ -3,7 +3,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
-import android.content.Context
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
@@ -28,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var GoToPlayerBTN: Button
     private lateinit var GoToLocationBTN: Button
     private lateinit var GoToMobileBTN: Button
+    private lateinit var GoToZMQ: Button
+    private lateinit var zaglushka: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +54,12 @@ class MainActivity : AppCompatActivity() {
             val randomIntent = Intent(this, MobileData::class.java)
             startActivity(randomIntent)
         }
-
-//        listOf  (
-//            R.id.GoToMobileData
-//        ).forEach { id ->
-//            ZaglushkaButton(findViewById(id))
-//        }
+        GoToZMQ = findViewById(R.id.goToZMQ)
+        GoToZMQ.setOnClickListener {
+            val randomIntent = Intent(this, ZeroMQ::class.java)
+            startActivity(randomIntent)
+        }
+        zaglushka = findViewById(R.id.zaglushkaBTN)
+        ZaglushkaButton(zaglushka)
     }
 }
