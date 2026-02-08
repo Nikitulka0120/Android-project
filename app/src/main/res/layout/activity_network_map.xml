@@ -5,35 +5,31 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#191B23"
-    tools:context=".MobileData">
+    android:background="@color/black"
+    tools:context=".NetworkMap">
 
     <TextView
-        android:id="@+id/result"
-        android:layout_width="401dp"
-        android:layout_height="599dp"
-        android:isScrollContainer="true"
-        android:scrollbars="vertical"
-        android:text="Данные не найдены"
-        android:textColor="#E6DADA"
-        android:textSize="14dp"
+        android:id="@+id/tvStatusLoger"
+        android:layout_width="283dp"
+        android:layout_height="313dp"
+        android:background="#FBFBFB"
+        android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.819" />
 
-    <Switch
-        android:id="@+id/isServerSwitch"
-        android:layout_width="333dp"
-        android:layout_height="27dp"
+    <ToggleButton
+        android:id="@+id/toggleButton"
+        android:layout_width="198dp"
+        android:layout_height="105dp"
         android:checked="false"
-        android:text="Включить передачу данных на сервер"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="ToggleButton"
+        app:layout_constraintBottom_toTopOf="@+id/tvStatusLoger"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.92" />
-
+        app:layout_constraintVertical_bias="0.681" />
 </androidx.constraintlayout.widget.ConstraintLayout>

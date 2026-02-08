@@ -53,8 +53,8 @@ class ZeroMQ : AppCompatActivity() {
         ConnectToRemote.setOnClickListener {
             ConnectToRemote.isEnabled = false
             LogConnection.append("\n--- Starting New Session ---\n")
-            LogConnection.append("\ntcp://155.212.222.104:5555\n")
-            val clientThread = Thread { startClient("tcp://155.212.222.104:5555") }
+            LogConnection.append("\ntcp://192.168.0.14:7777\n")
+            val clientThread = Thread { startClient("tcp://192.168.0.14:7777") }
             clientThread.start()
         }
     }

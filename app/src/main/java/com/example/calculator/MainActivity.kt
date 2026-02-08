@@ -2,64 +2,51 @@ package com.example.calculator
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
-class ZaglushkaButton(
-    private val button: Button
-) {
-    init {
-        button.setOnClickListener {
-            val context = button.context
-            val message = "Функционал ${button.text} временно недоступен :("
-            val duration = Toast.LENGTH_SHORT
-            Toast.makeText(context, message, duration).show()
-}
-
-            }
-        }
-
-
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var GoToCalcBTN: Button
-    private lateinit var GoToPlayerBTN: Button
-    private lateinit var GoToLocationBTN: Button
-    private lateinit var GoToMobileBTN: Button
-    private lateinit var GoToZMQ: Button
-    private lateinit var zaglushka: Button
+    private lateinit var goToCalcBTN: Button
+    private lateinit var goToPlayerBTN: Button
+    private lateinit var goToLocationBTN: Button
+    private lateinit var goToMobileBTN: Button
+    private lateinit var goToZMQBTN: Button
+    private lateinit var goToNetworkMapBTN: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        GoToCalcBTN = findViewById(R.id.GoToCalc)
-        GoToCalcBTN.setOnClickListener{
-            val randomIntent = Intent(this, CalculatorActivity::class.java)
-            startActivity(randomIntent)
+        goToCalcBTN = findViewById(R.id.GoToCalc)
+        goToCalcBTN.setOnClickListener{
+            val goToCalc = Intent(this, CalculatorActivity::class.java)
+            startActivity(goToCalc)
         };
-        GoToPlayerBTN = findViewById(R.id.GoToPlayer)
-        GoToPlayerBTN.setOnClickListener{
-            val randomIntent = Intent(this, MediaPlayer::class.java)
-            startActivity(randomIntent)
+        goToPlayerBTN = findViewById(R.id.GoToPlayer)
+        goToPlayerBTN.setOnClickListener{
+            val goToPlayer = Intent(this, MediaPlayer::class.java)
+            startActivity(goToPlayer)
         };
-        GoToLocationBTN = findViewById(R.id.GoToGeo)
-        GoToLocationBTN.setOnClickListener {
-            val randomIntent = Intent(this, Location::class.java)
-            startActivity(randomIntent)
+        goToLocationBTN = findViewById(R.id.GoToGeo)
+        goToLocationBTN.setOnClickListener {
+            val goToLocation = Intent(this, Location::class.java)
+            startActivity(goToLocation)
         }
-        GoToMobileBTN = findViewById(R.id.GoToMobileData)
-        GoToMobileBTN.setOnClickListener {
-            val randomIntent = Intent(this, MobileData::class.java)
-            startActivity(randomIntent)
+        goToMobileBTN = findViewById(R.id.GoToMobileData)
+        goToMobileBTN.setOnClickListener {
+            val goToMobile = Intent(this, MobileData::class.java)
+            startActivity(goToMobile)
         }
-        GoToZMQ = findViewById(R.id.goToZMQ)
-        GoToZMQ.setOnClickListener {
-            val randomIntent = Intent(this, ZeroMQ::class.java)
-            startActivity(randomIntent)
+        goToZMQBTN = findViewById(R.id.goToZMQ)
+        goToZMQBTN.setOnClickListener {
+            val goToZMQ = Intent(this, ZeroMQ::class.java)
+            startActivity(goToZMQ)
         }
-        zaglushka = findViewById(R.id.zaglushkaBTN)
-        ZaglushkaButton(zaglushka)
+        goToNetworkMapBTN = findViewById(R.id.mapBTN)
+        goToNetworkMapBTN.setOnClickListener {
+            val goToNetworkMap = Intent(this, NetworkMap::class.java)
+            startActivity(goToNetworkMap)
+        }
     }
 }

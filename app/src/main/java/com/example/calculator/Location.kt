@@ -36,12 +36,11 @@ class CurrentLoc(
         } catch (e: Exception) {
             Log.e("LocationData", "Error saving to file", e)
             Toast.makeText(context, "Error saving location", Toast.LENGTH_SHORT).show()
-            }
         }
     }
+}
 
 class Location : LocationListener, AppCompatActivity() {
-    val value: Int = 0
     val LOG_TAG: String = "LOCATION_ACTIVITY"
     companion object {
         private const val PERMISSION_REQUEST_ACCESS_LOCATION= 100
