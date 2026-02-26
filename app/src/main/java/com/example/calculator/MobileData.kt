@@ -20,7 +20,7 @@ import android.telephony.CellSignalStrengthNr
 import android.text.method.ScrollingMovementMethod
 import android.widget.TextView
 
-class MobileData : AppCompatActivity() {
+class  MobileData : AppCompatActivity() {
     val TAG = "TelephonyActivity"
     private lateinit var Result: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
