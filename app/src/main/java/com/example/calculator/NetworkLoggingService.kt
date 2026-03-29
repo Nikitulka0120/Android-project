@@ -18,6 +18,7 @@ import org.zeromq.SocketType
 import org.zeromq.ZContext
 import org.zeromq.ZMQ
 import java.util.concurrent.Executors
+import java.io.File
 
 class NetworkLoggingService : Service(), LocationListener {
 
@@ -26,7 +27,7 @@ class NetworkLoggingService : Service(), LocationListener {
     private lateinit var telephonyManager: TelephonyManager
     private var zmqContext: ZContext? = null
     private val executor = Executors.newSingleThreadExecutor()
-    private val serverAddress = "tcp://192.168.221.73:7777"
+    private val serverAddress = "tcp://192.168.0.14:7777"
 
     override fun onCreate() {
         super.onCreate()
@@ -58,6 +59,19 @@ class NetworkLoggingService : Service(), LocationListener {
             processAndSend(location, telephonyManager.allCellInfo)
         }
     }
+    private fun saveToFile(data: String) {
+        try {
+            val dir = getExternalFilesDir(android.os.Environment.DIRECTORY_DOCUMENTS)
+            if (dir != null && !dir.exists()) {
+                dir.mkdirs()
+            }
+            val exfile = File(dir, "locations_network.json")
+            Log.d("FileCheck", "Запись в файл: ${exfile.absolutePath}")
+            exfile.appendText(data + "\n")
+        } catch (e: Exception) {
+            Log.e("FileError", "Ошибка записи: ${e.message}")
+        }
+    }
 
     private fun processAndSend(location: Location, cellInfoList: List<CellInfo>?) {
         val payload = JSONObject().apply {
@@ -69,7 +83,10 @@ class NetworkLoggingService : Service(), LocationListener {
             put("cell_data", extractCellDetails(cellInfoList))
         }.toString()
 
-        executor.execute { sendZmqData(payload) }
+        executor.execute {
+            saveToFile(payload)
+            sendZmqData(payload)
+        }
     }
 
     private fun extractCellDetails(cellInfoList: List<CellInfo>?): JSONObject {
@@ -159,14 +176,30 @@ class NetworkLoggingService : Service(), LocationListener {
             zmqContext?.let { context ->
                 val socket = context.createSocket(SocketType.REQ)
                 socket.receiveTimeOut = 2000
+                socket.sendTimeOut = 2000
+
+                Log.d("ZMQ_LOG", "Попытка подключения к $serverAddress...")
                 socket.connect(serverAddress)
-                if (socket.send(data.toByteArray(ZMQ.CHARSET), 0)) {
-                    socket.recv(0)
+
+                Log.d("ZMQ_LOG", "Отправка пакета (${data.length} байт)...")
+                val sent = socket.send(data.toByteArray(ZMQ.CHARSET), 0)
+
+                if (sent) {
+                    val response = socket.recv(0)
+                    if (response != null) {
+                        val respStr = String(response, ZMQ.CHARSET)
+                        Log.i("ZMQ_LOG", "Данные доставлены успешно! Ответ сервера: $respStr")
+                    } else {
+                        Log.w("ZMQ_LOG", "Данные отправлены, но сервер не ответил (Timeout)")
+                    }
+                } else {
+                    Log.e("ZMQ_LOG", "Ошибка: не удалось поместить данные в очередь отправки")
                 }
+
                 socket.close()
             }
         } catch (e: Exception) {
-            Log.e("ZMQ", "Send error: ${e.message}")
+            Log.e("ZMQ_LOG", "Критическая ошибка ZMQ: ${e.message}")
         }
     }
 
