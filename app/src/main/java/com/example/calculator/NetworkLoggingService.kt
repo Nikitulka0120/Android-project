@@ -91,83 +91,94 @@ class NetworkLoggingService : Service(), LocationListener {
 
     private fun extractCellDetails(cellInfoList: List<CellInfo>?): JSONObject {
         val details = JSONObject()
-        val info = cellInfoList?.firstOrNull { it.isRegistered } ?: return details.put("error", "No Cell Info")
-        try {
-            when (info) {
-                is CellInfoLte -> {
-                    val id = info.cellIdentity
-                    val sig = info.cellSignalStrength
-                    details.put("type", "LTE")
+        val cellsArray = org.json.JSONArray()
 
-                    details.put("identity", JSONObject().apply {
-                        put("band",  id.bands.joinToString())
-                        put("ci", id.ci)
-                        put("earfcn", id.earfcn)
-                        put("mcc", id.mccString)
-                        put("mnc", id.mncString)
-                        put("pci", id.pci)
-                        put("tac", id.tac)
-                    })
-
-                    details.put("signal", JSONObject().apply {
-                        put("asuLevel", sig.asuLevel)
-                        put("cqi", sig.cqi)
-                        put("rsrp", sig.rsrp)
-                        put("rsrq", sig.rsrq)
-                        put("rssi", sig.rssi)
-                        put("rssnr", sig.rssnr)
-                        put("timingAdvance", sig.timingAdvance)
-                    })
-                }
-
-                is CellInfoGsm -> {
-                    val id = info.cellIdentity
-                    val sig = info.cellSignalStrength
-                    details.put("type", "GSM")
-
-                    details.put("identity", JSONObject().apply {
-                        put("cid", id.cid)
-                        put("bsic", id.bsic)
-                        put("arfcn", id.arfcn)
-                        put("lac", id.lac)
-                        put("mcc", id.mccString)
-                        put("mnc", id.mncString)
-                        put("psc", id.psc)
-                    })
-
-                    details.put("signal", JSONObject().apply {
-                        put("dbm", sig.dbm)
-                        put("rssi", sig.asuLevel)
-                        put("timingAdvance", sig.timingAdvance)
-                    })
-                }
-
-                is CellInfoNr -> {
-                    val id = info.cellIdentity as CellIdentityNr
-                    val sig = info.cellSignalStrength as CellSignalStrengthNr
-                    details.put("type", "NR")
-
-                    details.put("identity", JSONObject().apply {
-                        put("band", id.bands.joinToString())
-                        put("nci", id.nci)
-                        put("pci", id.pci)
-                        put("nrarfcn", id.nrarfcn)
-                        put("tac", id.tac)
-                        put("mcc", id.mccString)
-                        put("mnc", id.mncString)
-                    })
-
-                    details.put("signal", JSONObject().apply {
-                        put("ssRsrp", sig.ssRsrp)
-                        put("ssRsrq", sig.ssRsrq)
-                        put("ssSinr", sig.ssSinr)
-                    })
-                }
-            }
-        } catch (e: Exception) {
-            details.put("parsing_error", e.message)
+        if (cellInfoList.isNullOrEmpty()) {
+            return details.put("error", "No Cell Info Available")
         }
+        for (info in cellInfoList) {
+            val cellJson = JSONObject()
+            try {
+                cellJson.put("registered", info.isRegistered)
+                when (info) {
+                    is CellInfoLte -> {
+                        val id = info.cellIdentity
+                        val sig = info.cellSignalStrength
+                        cellJson.put("type", "LTE")
 
+                        cellJson.put("identity", JSONObject().apply {
+                            put("band",  id.bands.joinToString())
+                            put("ci", id.ci)
+                            put("earfcn", id.earfcn)
+                            put("mcc", id.mccString)
+                            put("mnc", id.mncString)
+                            put("pci", id.pci)
+                            put("tac", id.tac)
+                        })
+
+                        cellJson.put("signal", JSONObject().apply {
+                            put("asuLevel", sig.asuLevel)
+                            put("cqi", sig.cqi)
+                            put("rsrp", sig.rsrp)
+                            put("rsrq", sig.rsrq)
+                            put("rssi", sig.rssi)
+                            put("rssnr", sig.rssnr)
+                            put("timingAdvance", sig.timingAdvance)
+                        })
+                    }
+
+                    is CellInfoGsm -> {
+                        val id = info.cellIdentity
+                        val sig = info.cellSignalStrength
+                        cellJson.put("type", "GSM")
+
+                        cellJson.put("identity", JSONObject().apply {
+                            put("cid", id.cid)
+                            put("bsic", id.bsic)
+                            put("arfcn", id.arfcn)
+                            put("lac", id.lac)
+                            put("mcc", id.mccString)
+                            put("mnc", id.mncString)
+                            put("psc", id.psc)
+                        })
+
+                        cellJson.put("signal", JSONObject().apply {
+                            put("dbm", sig.dbm)
+                            put("rssi", sig.asuLevel)
+                            put("timingAdvance", sig.timingAdvance)
+                        })
+                    }
+
+                    is CellInfoNr -> {
+                        val id = info.cellIdentity as CellIdentityNr
+                        val sig = info.cellSignalStrength as CellSignalStrengthNr
+                        cellJson.put("type", "NR")
+
+                        cellJson.put("identity", JSONObject().apply {
+                            put("band", id.bands.joinToString())
+                            put("nci", id.nci)
+                            put("pci", id.pci)
+                            put("nrarfcn", id.nrarfcn)
+                            put("tac", id.tac)
+                            put("mcc", id.mccString)
+                            put("mnc", id.mncString)
+                        })
+
+                        cellJson.put("signal", JSONObject().apply {
+                            put("ssRsrp", sig.ssRsrp)
+                            put("ssRsrq", sig.ssRsrq)
+                            put("ssSinr", sig.ssSinr)
+                        })
+                    }
+                }
+                if (cellJson.has("type")) {
+                    cellsArray.put(cellJson)
+                }
+            } catch (e: Exception) {
+                details.put("parsing_error", e.message)
+            }}
+        details.put("cells", cellsArray)
+        details.put("count", cellsArray.length())
         return details
     }
 
